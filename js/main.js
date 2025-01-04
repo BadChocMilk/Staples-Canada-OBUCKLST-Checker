@@ -12,9 +12,11 @@ function checkOpenBox() {
         const workbook = XLSX.read(data, {type: "array"});
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const cvsData = XLSX.utils.sheet_to_csv(worksheet);
+        console.log(workbook);
     }
 
     fileReader.readAsArrayBuffer(xlf1);
     console.log("Hello from the console!");
+    
 }
 
