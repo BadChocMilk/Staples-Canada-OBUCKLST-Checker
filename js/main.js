@@ -1,10 +1,10 @@
 function checkOpenBox() {
-    if (document.getElementById(xlf1).files.length === 0){
+    if (document.getElementById("xlf1").files.length === 0){
         alert("No file is selected!")
         return
     }
 
-    const xlf1 = document.getElementById(xlf1).files[0];
+    const xlf1 = document.getElementById("xlf1").files[0];
     const fileReader = new FileReader();
 
     fileReader.onload = function (e){
