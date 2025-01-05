@@ -1,5 +1,5 @@
 # Staples Openbox Checker/Comparator 
-I made this because I was really annoyed with checking and comparing two lists every week. The best part about being a computer scientist is you can develop something to do what you're too lazy to do yourself. This was a project mostly made by me, but I see no reason as to why anyone else couldn't use it, so feel free!
+I made this because I was really annoyed with checking and comparing two lists every week. The best part about being a computer scientist is you can develop something to do what you're too lazy to do yourself. This was a project mostly made for me, but I see no reason as to why anyone else couldn't use it, so feel free!
 
 Please do not be afraid to report any issues or contribute in any way, this is kind of a rushed job, I basically did it in one afternoon, so there are bound to be some mistakes.
 
