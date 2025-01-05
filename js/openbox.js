@@ -32,7 +32,7 @@ function checkOpenBox() {
             newArray = worksheetToArray(worksheet);
             newArray = sortArray(newArray);
             let negativeArray = checkForNegatives(worksheet);
-            compareArrays(oldArray, newArray);
+            compareArrays(oldArray, newArray, negativeArray);
         }
         fileReader2.readAsArrayBuffer(xlf2);
     }
@@ -83,29 +83,68 @@ function sortArray(array){
     return array;
 }
 
-function compareArrays(oldArray, newArray){
+function compareArrays(oldArray, newArray, negativeArray){
+    
+    //totals, just for fun!
+    let oldNum = 0;
+    let newNum = 0;
+    let total = newArray.length;
 
-    let final = "SKU\tDescription\tOpenbox\nOPENBOX TO COME OFF\n"
-    console.log(oldArray);
+    let final = "OPENBOX TO COME OFF\nSKU#\t\tDescription\t\t\t\tOpenbox\n"
 
     // finding the openbox SKUs that need to come off
-    console.log(oldArray.length);
-    console.log(newArray.length);
     for(let i = 0; i < oldArray.length; i++){
-        for(let j = 0; j < newArray.length; j++){
+        for(let j = 0; j <= newArray.length; j++){
+            if( j == newArray.length){
+                final = final + oldArray[i][1] + "\t\t" + oldArray[i][2]+ "\t\t   " + oldArray[i][3] + "\n";
+                oldNum++;
+                break;
+            }
             if(oldArray[i][1] != newArray[j][1]){
                 //console.log(oldArray[i][1] + "\t" + newArray[j][1])
                 continue;
             }
             else{
-                console.log("equal found!");
                 break;
             }
-            final = final + oldArray[i][1] + oldArray[i][2] + oldArray[i][3];
         }
     }
 
+    // now to do it again, but for SKUs that need to go up. 
+
+    final = final + "\n\nOPENBOX TO GO ON\nSKU#\t\tDescription\t\t\t\tOpenbox\n"
+
+    for(let i = 0; i < newArray.length; i++){
+        for(let j = 0; j <= oldArray.length; j++){
+            if( j == oldArray.length){
+                final = final + newArray[i][1] + "\t\t" + newArray[i][2]+ "\t\t   " + newArray[i][3] + "\n";
+                newNum++;
+                break;
+            }
+            if(newArray[i][1] != oldArray[j][1]){
+                //console.log(oldArray[i][1] + "\t" + newArray[j][1])
+                continue;
+            }
+            else{
+                break;
+            }
+        }
+    }
+
+    // now to add the negatives, if any.
+    if(negativeArray == null){
+        console.log(final);
+        return;
+    }
+    else{
+        final = final + "\n\nNEGATIVES ON OPENBOX\nSKU#\t\tDescription\t\t\t\tOpenbox\n"
+        for(let i = 0; i < negativeArray.length; i++){
+            final = final + negativeArray[i][0] + "\t\t" + negativeArray[i][1]+ "\t\t   " + negativeArray[i][2] + "\n";
+        }
+    }
+    final = final + "\nTOTALS\noff: " + oldNum + "\ton: " + newNum + "\nnet: " + (newNum - oldNum) + "\ttotal: " + total;
     console.log(final);
+    document.getElementById("output").value = final;
 }
 
 function checkForNegatives(worksheet){
@@ -140,4 +179,18 @@ function checkForNegatives(worksheet){
         workArray.push([worksheet[sku]['w'], worksheet[desc]['w'], worksheet[openBox]['w']]);
     }
     return workArray;
+}
+
+function downloadTXT(){
+    const contents = document.getElementById("output").value;
+    const blob = new Blob([contents], {type: "text/plain"});
+    const a = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+
+    a.href = url;
+    a.download = "openbox.txt"
+
+    a.click();
+
+    URL.revokeObjectURL(url);
 }

@@ -6,6 +6,11 @@
         <script lang="javascript" src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
         <script src="./js/openbox.js" defer></script>
         <title>OpenBox Checker</title>
+        <style>
+            #output{
+                resize: vertical;
+            }
+        </style>
     </head>
 
     <body>
@@ -27,5 +32,11 @@
         <br>
         <br>
         <button onclick="checkOpenBox()">Check Open Box</button>
+        <br>
+        <br>
+
+        <textarea id="output" rows="30" cols="65" readonly></textarea>
+        <br>
+        <button id="download" onclick="downloadTXT()">Download as TXT file</button>
     </body>
 </html>
