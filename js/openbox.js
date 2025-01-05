@@ -33,7 +33,6 @@ function checkOpenBox() {
             const workbook = XLSX.read(data, {type: "array"});
             const worksheet = workbook.Sheets[workbook.SheetNames[0]];
             const cvsData = XLSX.utils.sheet_to_csv(worksheet);
-            console.log(worksheet);
             newArray = worksheetToArray(worksheet);
             newArray = sortArray(newArray);
             let negativeArray = checkForNegatives(worksheet);
@@ -84,7 +83,6 @@ function worksheetToArray(worksheet) {
 function sortArray(array){
     // sorting the array by class makes it easier to find product in the store.
     array.sort((a,b) => a[0] - b[0]);
-    console.log(array);
     return array;
 }
 
@@ -106,7 +104,6 @@ function compareArrays(oldArray, newArray, negativeArray){
                 break;
             }
             if(oldArray[i][1] != newArray[j][1]){
-                //console.log(oldArray[i][1] + "\t" + newArray[j][1])
                 continue;
             }
             else{
@@ -127,7 +124,6 @@ function compareArrays(oldArray, newArray, negativeArray){
                 break;
             }
             if(newArray[i][1] != oldArray[j][1]){
-                //console.log(oldArray[i][1] + "\t" + newArray[j][1])
                 continue;
             }
             else{
@@ -138,7 +134,6 @@ function compareArrays(oldArray, newArray, negativeArray){
 
     // now to add the negatives, if any.
     if(negativeArray == null){
-        console.log(final);
         return;
     }
     else{
@@ -148,7 +143,7 @@ function compareArrays(oldArray, newArray, negativeArray){
         }
     }
     final = final + "\nTOTALS\noff: " + oldNum + "\ton: " + newNum + "\nnet: " + (newNum - oldNum) + "\ttotal: " + total;
-    console.log(final);
+
     document.getElementById("output").value = final;
 }
 
