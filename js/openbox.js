@@ -3,7 +3,12 @@ function checkOpenBox() {
     let newArray;
     // most of this function was taken from the online guide https://medium.com/@sudipb001/how-to-convert-an-excel-file-to-a-csv-file-using-javascript-4e688e167641. Thank you Sudip!
     if (document.getElementById("xlf1").files.length === 0){
-        alert("No file is selected!")
+        alert("No previous file is selected!")
+        return
+    }
+
+    if (document.getElementById("xlf2").files.length === 0){
+        alert("No current file is selected!")
         return
     }
 
@@ -182,15 +187,41 @@ function checkForNegatives(worksheet){
 }
 
 function downloadTXT(){
+    // turning the contents of the text area to a txt file
     const contents = document.getElementById("output").value;
+    // checks to see if there is actually anything in the text area
+    if(contents == ""){
+        alert("There is nothing to be downloaded!")
+        return;
+    }
     const blob = new Blob([contents], {type: "text/plain"});
     const a = document.createElement("a");
     const url = URL.createObjectURL(blob);
 
     a.href = url;
-    a.download = "openbox.txt"
+    // this will add the date to the file name
+    a.download = "openbox_" + getFormattedDate() + ".txt"
 
+    // this is what downloads it!
     a.click();
 
+    // cleanup of the URL
     URL.revokeObjectURL(url);
+}
+
+function getFormattedDate() {
+    const date = new Date();
+
+    // Get the month, day, and year
+    const month = date.getMonth() + 1; // Months are zero-indexed, so add 1
+    const day = date.getDate();
+    const year = date.getFullYear();
+
+    // Format month, day, and year to ensure they are two digits
+    const formattedMonth = month < 10 ? "0" + month : month;
+    const formattedDay = day < 10 ? "0" + day : day;
+    const formattedYear = year.toString().slice(-2); // Get last two digits of the year
+
+    // Return the date in mm/dd/yy format
+    return (formattedMonth + formattedDay + formattedYear);
 }
