@@ -133,9 +133,8 @@ function compareArrays(oldArray, newArray, negativeArray){
     }
 
     // now to add the negatives, if any.
-    if(negativeArray == null){
-        return;
-    }
+    console.log(negativeArray);
+    if(negativeArray.length == 0){}
     else{
         final = final + "\n\nNEGATIVES ON OPENBOX\nSKU#\t\tDescription\t\t\t\tOpenbox\n"
         for(let i = 0; i < negativeArray.length; i++){
