@@ -45,6 +45,31 @@ function checkOpenBox() {
     console.log("Hello from the console!");
 }
 
+function fullOpenBoxList(){
+    let obList;
+
+
+    // grabs the current week file
+    if (document.getElementById("xlf2").files.length === 0){
+        alert("To get an OpenBox list, only current needs a file.")
+        return
+    }
+
+    const xlf2 = document.getElementById("xlf2").files[0];
+    const fileReader = new FileReader();
+
+    fileReader.onload = function (e){
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, {type: "array"});
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const cvsData = XLSX.utils.sheet_to_csv(worksheet);
+        obList = worksheetToArray(worksheet);
+        obList = sortArray(obList);
+        arrayToOBString(obList);
+    }
+    fileReader.readAsArrayBuffer(xlf2)
+}
+
 function worksheetToArray(worksheet) {
 
 
@@ -75,7 +100,7 @@ function worksheetToArray(worksheet) {
             continue;
         }
         // adds them all to an array consisting of ONLY openbox products.
-        workArray.push([worksheet[storeClass]['w'], worksheet[sku]['w'], worksheet[desc]['w'], worksheet[openBox]['w']]);
+        workArray.push([worksheet[storeClass]['w'], skuFormatter(worksheet[sku]['w']), descriptionFormatter(worksheet[desc]['w']), worksheet[openBox]['w']]);
     }
     return workArray;
 }
@@ -93,15 +118,16 @@ function compareArrays(oldArray, newArray, negativeArray){
     let newNum = 0;
     let total = newArray.length;
 
-    let final = "OPENBOX TO COME OFF\nSKU#\t\tDescription\t\t\t\tOpenbox\n"
+    let final = "OPENBOX TO COME OFF\nSKU#\t\tDescription\t\t\t\tOpenBox\n"
 
     // finding the openbox SKUs that need to come off
     for(let i = 0; i < oldArray.length; i++){
         for(let j = 0; j <= newArray.length; j++){
             if( j == newArray.length){
-                final = final + oldArray[i][1] + "\t\t" + oldArray[i][2]+ "\t\t   " + oldArray[i][3] + "\n";
+                final = final + oldArray[i][1] + "\t" + oldArray[i][2]+ "\t\t   " + oldArray[i][3] + "\n";
                 oldNum++;
                 break;
+
             }
             if(oldArray[i][1] != newArray[j][1]){
                 continue;
@@ -114,14 +140,15 @@ function compareArrays(oldArray, newArray, negativeArray){
 
     // now to do it again, but for SKUs that need to go up. 
 
-    final = final + "\n\nOPENBOX TO GO ON\nSKU#\t\tDescription\t\t\t\tOpenbox\n"
+    final = final + "\n\nOPENBOX TO GO ON\nSKU#\t\tDescription\t\t\t\tOpenBox\n"
 
     for(let i = 0; i < newArray.length; i++){
         for(let j = 0; j <= oldArray.length; j++){
             if( j == oldArray.length){
-                final = final + newArray[i][1] + "\t\t" + newArray[i][2]+ "\t\t   " + newArray[i][3] + "\n";
+                final = final + newArray[i][1] + "\t" + newArray[i][2]+ "\t\t   " + newArray[i][3] + "\n";
                 newNum++;
-                break;
+                break;  
+
             }
             if(newArray[i][1] != oldArray[j][1]){
                 continue;
@@ -136,12 +163,27 @@ function compareArrays(oldArray, newArray, negativeArray){
     console.log(negativeArray);
     if(negativeArray.length == 0){}
     else{
-        final = final + "\n\nNEGATIVES ON OPENBOX\nSKU#\t\tDescription\t\t\t\tOpenbox\n"
+        final = final + "\n\nNEGATIVES ON OPENBOX\nSKU#\t\tDescription\t\t\t\tOpenBox\n"
         for(let i = 0; i < negativeArray.length; i++){
             final = final + negativeArray[i][0] + "\t\t" + negativeArray[i][1]+ "\t\t   " + negativeArray[i][2] + "\n";
         }
     }
     final = final + "\nTOTALS\noff: " + oldNum + "\ton: " + newNum + "\nnet: " + (newNum - oldNum) + "\ttotal: " + total;
+
+    document.getElementById("output").value = final;
+}
+
+function arrayToOBString(array){
+    // this will turn the array into a string to be displayed in the text area.
+    let final = getFormattedDate() + "\tOpenBox\nSKU\t\tDescription\t\t\t\tOpenBox\n";
+    let count = 0;
+    
+
+    for(let i = 0; i < array.length; i++){
+            final = final + array[i][1] + "\t" + array[i][2]+ "\t\t   " + array[i][3] + "\n";
+            count++;
+    }
+    final = final + "\nTotal: " + count;
 
     document.getElementById("output").value = final;
 }
@@ -180,42 +222,18 @@ function checkForNegatives(worksheet){
     return workArray;
 }
 
-function downloadTXT(){
-    // turning the contents of the text area to a txt file
-    const contents = document.getElementById("output").value;
-    // checks to see if there is actually anything in the text area
-    if(contents == ""){
-        alert("There is nothing to be downloaded!")
-        return;
+function descriptionFormatter(desc){
+    // formats the description so it fits better when converting it to a string.
+    while(desc.length < 30){
+        desc = desc + " ";
     }
-    const blob = new Blob([contents], {type: "text/plain"});
-    const a = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-
-    a.href = url;
-    // this will add the date to the file name
-    a.download = "openbox_" + getFormattedDate() + ".txt"
-
-    // this is what downloads it!
-    a.click();
-
-    // cleanup of the URL
-    URL.revokeObjectURL(url);
+    return desc;
 }
 
-function getFormattedDate() {
-    const date = new Date();
-
-    // Get the month, day, and year
-    const month = date.getMonth() + 1; // Months are zero-indexed, so add 1
-    const day = date.getDate();
-    const year = date.getFullYear();
-
-    // Format month, day, and year to ensure they are two digits
-    const formattedMonth = month < 10 ? "0" + month : month;
-    const formattedDay = day < 10 ? "0" + day : day;
-    const formattedYear = year.toString().slice(-2); // Get last two digits of the year
-
-    // Return the date in mm/dd/yy format
-    return (formattedMonth + formattedDay + formattedYear);
+function skuFormatter(sku){
+    // formats the sku  so it fits better when converting it to a string.
+    while(sku.length < 8){
+        sku = sku + " ";
+    }
+    return sku;
 }
