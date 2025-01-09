@@ -133,7 +133,7 @@ function compareArrays(oldArray, newArray, negativeArray){
     let oldNum = 0;
     let newNum = 0;
 
-    let final = "OPENBOX TO COME OFF\nSKU#\t\tDescription\t\t\t\tOpenBox\n"
+    let final = "OPENBOX TO COME OFF\nSKU\t\tDescription\t\t\t\tOpenBox\n"
 
     // finding the openbox SKUs that need to come off
     for(let i = 0; i < oldArray.length; i++){
@@ -155,7 +155,7 @@ function compareArrays(oldArray, newArray, negativeArray){
 
     // now to do it again, but for SKUs that need to go up. 
 
-    final = final + "\n\nOPENBOX TO GO ON\nSKU#\t\tDescription\t\t\t\tOpenBox\n"
+    final = final + "\n\nOPENBOX TO GO ON\nSKU\t\tDescription\t\t\t\tOpenBox\n"
 
     for(let i = 0; i < newArray.length; i++){
         for(let j = 0; j <= oldArray.length; j++){
