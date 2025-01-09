@@ -27,13 +27,15 @@
         <input type="file" name="xlf2" id="xlf2" accept=".xlsx,.xls"/>
         <br>
         <br>
-        <button onclick="checkOpenBox()">Check Open Box</button>
-        <button onclick="fullOpenBoxList()">Get Full Open Box List</button>
+        <button onclick="checkOpenBoxButton()">Check Open Box</button>
+        <button onclick="fullOpenBoxListButton()">Get Full Open Box List</button>
+        <button onclick="getCombinedList()">Get Combined List</button>
         <br>
         <br>
 
         <textarea id="output" rows="30" cols="65" readonly></textarea>
         <br>
         <button id="download" onclick="downloadTXT()">Download as TXT file</button>
+        <button id="print" onclick="printTXT()">Print TXT File</button>
     </body>
 </html>

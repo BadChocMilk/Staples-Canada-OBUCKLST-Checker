@@ -2,16 +2,6 @@ function checkOpenBox() {
     let oldArray;
     let newArray;
     // most of this function was taken from the online guide https://medium.com/@sudipb001/how-to-convert-an-excel-file-to-a-csv-file-using-javascript-4e688e167641. Thank you Sudip!
-    if (document.getElementById("xlf1").files.length === 0){
-        alert("No previous file is selected!")
-        return
-    }
-
-    if (document.getElementById("xlf2").files.length === 0){
-        alert("No current file is selected!")
-        return
-    }
-
 
     const xlf1 = document.getElementById("xlf1").files[0];
     const fileReader = new FileReader();
@@ -36,7 +26,7 @@ function checkOpenBox() {
             newArray = worksheetToArray(worksheet);
             newArray = sortArray(newArray);
             let negativeArray = checkForNegatives(worksheet);
-            compareArrays(oldArray, newArray, negativeArray);
+            final = compareArrays(oldArray, newArray, negativeArray);
         }
         fileReader2.readAsArrayBuffer(xlf2);
     }
@@ -45,16 +35,29 @@ function checkOpenBox() {
     console.log("Hello from the console!");
 }
 
-function fullOpenBoxList(){
-    let obList;
+function checkOpenBoxButton(){
+    // first clear the text area
+    clearTextArea();
 
-
-    // grabs the current week file
-    if (document.getElementById("xlf2").files.length === 0){
-        alert("To get an OpenBox list, only current needs a file.")
+    // check to see if there is a file
+    if (document.getElementById("xlf1").files.length === 0){
+        alert("No previous file is selected!")
         return
     }
 
+    if (document.getElementById("xlf2").files.length === 0){
+        alert("No current file is selected!")
+        return
+    }
+
+    checkOpenBox();
+    
+}
+
+function fullOpenBoxList(){
+    let obList;
+
+    // grabs the current week file
     const xlf2 = document.getElementById("xlf2").files[0];
     const fileReader = new FileReader();
 
@@ -65,9 +68,22 @@ function fullOpenBoxList(){
         const cvsData = XLSX.utils.sheet_to_csv(worksheet);
         obList = worksheetToArray(worksheet);
         obList = sortArray(obList);
-        arrayToOBString(obList);
+        final = arrayToOBString(obList);
     }
     fileReader.readAsArrayBuffer(xlf2)
+}
+
+function fullOpenBoxListButton(){
+    // first clear text area
+    clearTextArea();
+
+    // checks if the file is there
+    if (document.getElementById("xlf2").files.length === 0){
+        alert("To get an OpenBox list, only current needs a file.")
+        return
+    }
+
+    fullOpenBoxList();
 }
 
 function worksheetToArray(worksheet) {
@@ -116,7 +132,6 @@ function compareArrays(oldArray, newArray, negativeArray){
     //totals, just for fun!
     let oldNum = 0;
     let newNum = 0;
-    let total = newArray.length;
 
     let final = "OPENBOX TO COME OFF\nSKU#\t\tDescription\t\t\t\tOpenBox\n"
 
@@ -160,7 +175,6 @@ function compareArrays(oldArray, newArray, negativeArray){
     }
 
     // now to add the negatives, if any.
-    console.log(negativeArray);
     if(negativeArray.length == 0){}
     else{
         final = final + "\n\nNEGATIVES ON OPENBOX\nSKU#\t\tDescription\t\t\t\tOpenBox\n"
@@ -168,14 +182,15 @@ function compareArrays(oldArray, newArray, negativeArray){
             final = final + negativeArray[i][0] + "\t\t" + negativeArray[i][1]+ "\t\t   " + negativeArray[i][2] + "\n";
         }
     }
-    final = final + "\nTOTALS\noff: " + oldNum + "\ton: " + newNum + "\nnet: " + (newNum - oldNum) + "\ttotal: " + total;
+    final = final + "\noff: " + oldNum + "\ton: " + newNum + "\tnet: " + (newNum - oldNum);
 
-    document.getElementById("output").value = final;
+    addToTextArea(final);
+    return final;
 }
 
 function arrayToOBString(array){
     // this will turn the array into a string to be displayed in the text area.
-    let final = getFormattedDate() + "\tOpenBox\nSKU\t\tDescription\t\t\t\tOpenBox\n";
+    let final ="SKU\t\tDescription\t\t\t\tOpenBox\n";
     let count = 0;
     
 
@@ -183,9 +198,10 @@ function arrayToOBString(array){
             final = final + array[i][1] + "\t" + array[i][2]+ "\t\t   " + array[i][3] + "\n";
             count++;
     }
-    final = final + "\nTotal: " + count;
+    final = final + "\nTotal: " + count + "\n\n";
 
-    document.getElementById("output").value = final;
+    addToTextArea(final);
+    return final;
 }
 
 function checkForNegatives(worksheet){
@@ -220,6 +236,37 @@ function checkForNegatives(worksheet){
         workArray.push([worksheet[sku]['w'], worksheet[desc]['w'], worksheet[openBox]['w']]);
     }
     return workArray;
+}
+
+function getCombinedList(){
+    // clear the text area
+    clearTextArea();
+
+    // check to see if there is a file
+    if (document.getElementById("xlf1").files.length === 0){
+        alert("No previous file is selected!")
+        return
+    }
+
+    if (document.getElementById("xlf2").files.length === 0){
+        alert("No current file is selected!")
+        return
+    }
+    
+
+    // adds both of them to the text area.
+    fullOpenBoxList();
+    checkOpenBox();
+}
+
+function addToTextArea(text){
+    // adds string to the text area.
+    document.getElementById("output").value = document.getElementById("output").value + text;
+}
+
+function clearTextArea(){
+    // clears the text area
+    document.getElementById("output").value = "";
 }
 
 function descriptionFormatter(desc){

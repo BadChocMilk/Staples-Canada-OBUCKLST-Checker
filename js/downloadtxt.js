@@ -21,6 +21,22 @@ function downloadTXT(){
     URL.revokeObjectURL(url);
 }
 
+function printTXT(){
+    // handles printing of the file instead of downloading it as a txt
+    let content = document.getElementById("output").value;
+    let printWindow = window.open("", "", "width=800,height=600");
+
+    printWindow.document.write('<html><head><title>OpenBox</title>');
+    printWindow.document.write('<style>body { font-family: Arial, sans-serif; margin: 20px; }</style>'); // Basic styles
+    printWindow.document.write('</head><body>');
+    printWindow.document.write("<pre>" + content+ "</pre>");
+    printWindow.document.write('</body></html>');
+
+
+    printWindow.document.close();
+    printWindow.print();
+}
+
 function getFormattedDate() {
     const date = new Date();
 
