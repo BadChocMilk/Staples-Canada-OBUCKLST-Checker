@@ -179,7 +179,7 @@ function compareArrays(oldArray, newArray, negativeArray){
     else{
         final = final + "\n\nNEGATIVES ON OPENBOX\nSKU#\t\tDescription\t\t\t\tOpenBox\n"
         for(let i = 0; i < negativeArray.length; i++){
-            final = final + negativeArray[i][0] + "\t\t" + negativeArray[i][1]+ "\t\t   " + negativeArray[i][2] + "\n";
+            final = final + skuFormatter(negativeArray[i][0]) + "\t" + descriptionFormatter(negativeArray[i][1])+ "\t\t  " + negativeArray[i][2] + "\n";
         }
     }
     final = final + "\noff: " + oldNum + "\ton: " + newNum + "\tnet: " + (newNum - oldNum);
