@@ -1,12 +1,15 @@
 function verifyButton(){
     // clear text area.
     clearTextArea();
+
+    verify();
+
 }
 
 function verify(){
     let verifyList
 
-    // grabs the current week file
+    // grabs the current file
     const xlf2 = document.getElementById("xlf2").files[0];
     const fileReader = new FileReader();
 
@@ -16,6 +19,7 @@ function verify(){
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const cvsData = XLSX.utils.sheet_to_csv(worksheet);
         verifyList = worksheetToVerifyArray(worksheet);
+        console.log("hi");
         verifyList = sortArray(verifyList);
         final = arrayToVerifyString(verifyList);
     }
@@ -24,6 +28,7 @@ function verify(){
 
 function worksheetToVerifyArray(worksheet){
     let workArray = [];
+    console.log('hi');
 
     let numRows = 1;
     let column = "A" + numRows;
@@ -50,14 +55,16 @@ function worksheetToVerifyArray(worksheet){
             continue;
         }
         // adds them all to an array consisting of ONLY verify products.
-        workArray.push([worksheet[storeClass]['w'], skuFormatter(worksheet[sku]['w']), descriptionFormatter(worksheet[desc]['w']), worksheet[openBox]['w']]);
+        workArray.push([worksheet[storeClass]['w'], skuFormatter(worksheet[sku]['w']), descriptionFormatter(worksheet[desc]['w']), worksheet[verify]['w']]);
     }
+    console.log('hi');
+    console.log(worksheet);
     return workArray;
 }
 
 function arrayToVerifyString(array){
     // this will turn the array into a string to be displayed in the text area.
-    let final ="SKU\t\tDescription\t\t\t\tOpenBox\n";
+    let final ="SKU\t\tDescription\t\t\t\tVerify\n";
     let count = 0;
     
 
