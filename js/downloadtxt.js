@@ -36,20 +36,3 @@ function printTXT(){
     printWindow.document.close();
     printWindow.print();
 }
-
-function getFormattedDate() {
-    const date = new Date();
-
-    // Get the month, day, and year
-    const month = date.getMonth() + 1; // Months are zero-indexed, so add 1
-    const day = date.getDate();
-    const year = date.getFullYear();
-
-    // Format month, day, and year to ensure they are two digits
-    const formattedMonth = month < 10 ? "0" + month : month;
-    const formattedDay = day < 10 ? "0" + day : day;
-    const formattedYear = year.toString().slice(-2); // Get last two digits of the year
-
-    // Return the date in mm/dd/yy format
-    return (formattedMonth + "/" + formattedDay + "/" + formattedYear);
-}

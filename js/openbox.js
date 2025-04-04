@@ -36,10 +36,8 @@ function checkOpenBox() {
 }
 
 function checkOpenBoxButton(){
-    // first clear the text area
-    clearTextArea();
 
-    // check to see if there is a file
+    // first checks to see if there is a file
     if (document.getElementById("xlf1").files.length === 0){
         alert("No previous file is selected!")
         return
@@ -49,6 +47,9 @@ function checkOpenBoxButton(){
         alert("No current file is selected!")
         return
     }
+
+    // then it clears the text box
+    clearTextArea();
 
     checkOpenBox();
     
@@ -74,57 +75,17 @@ function fullOpenBoxList(){
 }
 
 function fullOpenBoxListButton(){
-    // first clear text area
-    clearTextArea();
+
 
     // checks if the file is there
     if (document.getElementById("xlf2").files.length === 0){
         alert("To get an OpenBox list, only current needs a file.")
         return
     }
+    // then clears the text box if it is there
+    clearTextArea();
 
     fullOpenBoxList();
-}
-
-function worksheetToArray(worksheet) {
-
-
-    let workArray = [];
-
-    let numRows = 1;
-    let column = "A" + numRows;
-    // try catch counts every entry in the list.
-    try{
-        while(true){
-            worksheet[column]["v"];
-            numRows++;
-            column = "A" + numRows;
-        }
-    }catch{
-        // because there are column labels, subtract one.
-        numRows--;
-    }
-    for(let i = 2; i <= numRows; i++){
-        // A for SKU, C for item Desc., F for class, J for openbox quantity
-        let sku = "A" + i;
-        let desc = "C" + i;
-        let storeClass = "F" + i;
-        let openBox = "J" + i;
-
-        // checks to see if there are any openbox products.
-        if(worksheet[openBox]['v'] < 1){
-            continue;
-        }
-        // adds them all to an array consisting of ONLY openbox products.
-        workArray.push([worksheet[storeClass]['w'], skuFormatter(worksheet[sku]['w']), descriptionFormatter(worksheet[desc]['w']), worksheet[openBox]['w']]);
-    }
-    return workArray;
-}
-
-function sortArray(array){
-    // sorting the array by class makes it easier to find product in the store.
-    array.sort((a,b) => a[0] - b[0]);
-    return array;
 }
 
 function compareArrays(oldArray, newArray, negativeArray){
@@ -239,8 +200,6 @@ function checkForNegatives(worksheet){
 }
 
 function getCombinedList(){
-    // clear the text area
-    clearTextArea();
 
     // check to see if there is a file
     if (document.getElementById("xlf1").files.length === 0){
@@ -252,6 +211,9 @@ function getCombinedList(){
         alert("No current file is selected!")
         return
     }
+
+   // clear the text area
+   clearTextArea();
     
 
     // adds both of them to the text area.
@@ -259,28 +221,37 @@ function getCombinedList(){
     checkOpenBox();
 }
 
-function addToTextArea(text){
-    // adds string to the text area.
-    document.getElementById("output").value = document.getElementById("output").value + text;
-}
+function worksheetToArray(worksheet) {
 
-function clearTextArea(){
-    // clears the text area
-    document.getElementById("output").value = "";
-}
 
-function descriptionFormatter(desc){
-    // formats the description so it fits better when converting it to a string.
-    while(desc.length < 30){
-        desc = desc + " ";
+    let workArray = [];
+
+    let numRows = 1;
+    let column = "A" + numRows;
+    // try catch counts every entry in the list.
+    try{
+        while(true){
+            worksheet[column]["v"];
+            numRows++;
+            column = "A" + numRows;
+        }
+    }catch{
+        // because there are column labels, subtract one.
+        numRows--;
     }
-    return desc;
-}
+    for(let i = 2; i <= numRows; i++){
+        // A for SKU, C for item Desc., F for class, J for openbox quantity
+        let sku = "A" + i;
+        let desc = "C" + i;
+        let storeClass = "F" + i;
+        let openBox = "J" + i;
 
-function skuFormatter(sku){
-    // formats the sku  so it fits better when converting it to a string.
-    while(sku.length < 8){
-        sku = sku + " ";
+        // checks to see if there are any openbox products.
+        if(worksheet[openBox]['v'] < 1){
+            continue;
+        }
+        // adds them all to an array consisting of ONLY openbox products.
+        workArray.push([worksheet[storeClass]['w'], skuFormatter(worksheet[sku]['w']), descriptionFormatter(worksheet[desc]['w']), worksheet[openBox]['w']]);
     }
-    return sku;
+    return workArray;
 }
