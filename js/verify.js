@@ -1,7 +1,13 @@
 function verifyButton(){
+
+    // checks if the file is there
+    if (document.getElementById("xlf2").files.length === 0){
+        alert("To get a Verify list, only current needs a file.")
+        return
+    }
+
     // clear text area.
     clearTextArea();
-
     verify();
 
 }
@@ -19,7 +25,6 @@ function verify(){
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const cvsData = XLSX.utils.sheet_to_csv(worksheet);
         verifyList = worksheetToVerifyArray(worksheet);
-        console.log("hi");
         verifyList = sortArray(verifyList);
         final = arrayToVerifyString(verifyList);
     }
@@ -28,7 +33,6 @@ function verify(){
 
 function worksheetToVerifyArray(worksheet){
     let workArray = [];
-    console.log('hi');
 
     let numRows = 1;
     let column = "A" + numRows;
@@ -57,8 +61,6 @@ function worksheetToVerifyArray(worksheet){
         // adds them all to an array consisting of ONLY verify products.
         workArray.push([worksheet[storeClass]['w'], skuFormatter(worksheet[sku]['w']), descriptionFormatter(worksheet[desc]['w']), worksheet[verify]['w']]);
     }
-    console.log('hi');
-    console.log(worksheet);
     return workArray;
 }
 

@@ -50,7 +50,6 @@ function checkOpenBoxButton(){
 
     // then it clears the text box
     clearTextArea();
-
     checkOpenBox();
     
 }
@@ -84,7 +83,6 @@ function fullOpenBoxListButton(){
     }
     // then clears the text box if it is there
     clearTextArea();
-
     fullOpenBoxList();
 }
 
