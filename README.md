@@ -7,3 +7,5 @@ Please do not be afraid to report any issues or contribute in any way, this is k
 Using it is fairly straightforward. The openbox list from the OBUCKLST will need to be completed at least once. After that, the previous OBUCKLST and the current one can just be uploaded, no fomatting or anything done to it, and it will do its job.
 
 There is also an option to check for the verified list, so that items that still need to be verified can easily be checked. Same process as openbox, but  click "verify" instead. Uses the current OBUCKLST selection.
+
+Now supports "Negative News"! If there is any negative onhands, it will display how many, as well as which list those negatives may come from. Adjustments can be made accordingly.
